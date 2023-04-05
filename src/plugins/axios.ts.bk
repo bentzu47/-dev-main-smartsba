@@ -1,0 +1,13 @@
+import axios from "axios";
+
+export default defineNuxtPlugin(({ vueApp }) => {
+  console.log("🧩 Plugin Name: 💜 Axios");
+  vueApp.use(axios, axios.create({
+        baseURL: '',
+        headers: {
+            'Authorization': 'Basic',
+            'Content-Type': 'application/x-www-form-urlencoded'
+        }
+    })
+  );
+})

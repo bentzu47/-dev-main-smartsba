@@ -1,0 +1,54 @@
+
+:root{
+    --sidemenu-color: #2A3F54;
+    --sidemenu-nav-color: #020081;
+}
+#menu-side {
+    background: var(--sidemenu-color);
+}
+
+#menu-sidenav {
+    background-color: var(--sidemenu-nav-color);
+}
+
+.sidenav-collapse, .sidenav-menu {
+    list-style: none;
+    position: relative;
+    padding: 0 var(--mdb-sidenav-menu-padding);
+    margin: 0;
+}
+
+
+#menu-sidenav .sidenav-item:first-child {
+    margin-top: 4px;
+}
+#menu-sidenav .sidenav-item {
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

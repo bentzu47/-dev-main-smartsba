@@ -1,0 +1,17 @@
+interface SBRE003 {
+    applicationid: string
+}
+        // getUserById: (state) => {
+        //     return (userId) => state.users.find((user) => user.id === userId);
+        // },
+// export const useStore = defineStore("sbse003", {
+//     getters: {
+//         // getString: (key: string): string =>{
+//         //     let str: string = '';
+//         //     return () => str;
+//         // }
+//     }
+// });
+
+
+export default SBRE003;

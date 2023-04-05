@@ -1,0 +1,39 @@
+@use "mdb-vue-ui-kit/css/mdb.min.css" as mdb;
+// @use "~/assets/css/kendo-theme-default-all.css" as kendo;
+@use "@progress/kendo-theme-default/dist/all.css";
+
+@use "~/assets/css/sba-kendo-styles";
+// @import 'mdb-ui-kit/css/mdb.min.css';
+.form-label {
+    margin-bottom: 0.25rem;
+    font-weight: 700;// fw-bold
+    color: #000000;
+    font-size: 15px;
+    &.require::after {
+        content: "*";
+        color: #DB524C;
+        font-weight: 400;
+        padding-left: 5px;
+    }
+}
+.header-label {
+    color: #375777 !important;
+    font-weight: bolder !important;
+}
+
+.title-row {
+    padding: 0 0 0.5rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 0 0 #efefef;
+}
+
+
+// Input Fields
+// #5bbc9d
+.form-control {
+    &:hover,&:focus {
+        border-color: #5bbc9d;
+        box-shadow: inset 0px 0px 0px 1px #5bbc9d;
+        // box-shadow: none;
+    }
+}

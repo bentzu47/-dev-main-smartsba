@@ -1,0 +1,203 @@
+<template>
+    <div id="workflow-button" :class="`row ${className}`">
+        <div
+            v-for="(list, index) in btnPositionList"
+            :key="index"
+            :class="contentSizeCalculate(index, list[0].position)"
+        >
+            <template v-if="list.length > 0" v-for="item of list">
+                <button
+                    v-if="index == 0 && defaultBtn"
+                    type="button"
+                    :id="`${defaultBtn}`"
+                    class="btn btn-grey waves-effect"
+                    @click="defaultButtonFlow(defaultBtn)"
+                >
+                    {{ defaultBtn }}
+                </button>
+                <button
+                    type="button"
+                    :id="`${item.idname}`"
+                    :class="`${item.idname} btn ${item.colorclass} waves-effect`"
+                    @click="
+                        emit(
+                            'action-flow',
+                            item.step,
+                            item.action,
+                            item.actiontype
+                        )
+                    "
+                >
+                    <i :class="`${item.iconclass} me-2`"></i>
+                    {{ item.actionname }}
+                </button>
+            </template>
+        </div>
+    </div>
+</template>
+
+<script setup lang="ts">
+console.log("=== WORKFLOW BUTTON ===");
+const config = useRuntimeConfig();
+import axios from "axios";
+interface WorkflowButtonProps {
+    applicationid?: string;
+    className?: string;
+    useBackBtn?: boolean;
+    useCloseBtn?: boolean;
+    useCancelBtn?: boolean;
+    defaultBtn?: string | false;
+}
+
+type ResultListType = {
+    position: string;
+    step: string;
+    actionname: string;
+    action: string;
+    colorclass: string;
+    actiontype: string;
+    iconclass: string;
+    idname: string;
+};
+
+const props = withDefaults(defineProps<WorkflowButtonProps>(), {
+    className: "",
+    applicationid: "",
+    useBackBtn: false,
+    useCloseBtn: false,
+    useCancelBtn: false,
+    defaultBtn: false,
+});
+
+// const { data } = useFetch("/api/freshflow/workflow-button", {
+//     // pick: ["result_list"],
+//     body: {
+//         product: "SBA_CASH",
+//         taskname: "REQCMDEPOSIT",
+//         userid: "ncit",
+//     },
+// });
+
+const { data } = await useFetch(() => `/api/freshflow/workflowbutton`,{
+    // pick: ["result_list"],
+    body: {
+        product: "SBA_CASH",
+        taskname: "REQCMDEPOSIT",
+        userid: "ncit",
+    },
+})
+console.log("# data: ", data);
+// console.log('# menuLists: ', data?._rawValue?.content)
+const menuLists = await data?._rawValue?.content;
+console.log('# menuLists: ', menuLists)
+
+
+console.log("# WORKFLOW BUTTON | data: ", data.value);
+
+// const response = axios.post(`/api/freshflow/workflow-button`, {
+//         product: "SBA_CASH",
+//         taskname: "REQCMDEPOSIT",
+//         userid: "ncit",
+//     }).then((result) => {
+//         console.log("SUCCESS : Workflow Button");
+//         console.log("# reesult: ", result);
+//         if (result.data.body.result == "Y") {
+//             // this.setAccountDetail(result.data.body);
+//         } else {
+//             // this.claerAccountDetail();
+//           }
+//         })
+//         .catch((error) => {
+//           console.log("ERROR : Workflow Button");
+//           console.error('Request canceled', error);
+// //         });
+
+// console.log("========== [START] WORKFLOW-BUTTON ==========");
+// console.log("# response: ", response.value);
+// const buttonFuncList:Ref<Array<ResultListType[]>> = ref([]);
+
+console.log("# Result List: ", await data?._rawValue?.content);
+
+
+const result_list: Array<ResultListType> = await data?._rawValue?.content?.result_list ?? [];
+const btnPositionList: Ref<Array<ResultListType[]>> = ref([]);
+
+const btnLeftCount: Ref<number> = ref(0);
+const btnCenterCount: Ref<number> = ref(0);
+const btnRightCount: Ref<number> = ref(0);
+const getButtonByPosition = (position: string): ResultListType[] => {
+    return result_list.filter((item) => position == item.position);
+};
+if (result_list.length > 0) {
+    let leftList = getButtonByPosition("left");
+    let centerList = getButtonByPosition("center");
+    let rightList = getButtonByPosition("right");
+    btnLeftCount.value = props.defaultBtn
+        ? leftList.length + 1
+        : leftList.length;
+    btnCenterCount.value = centerList.length;
+    btnRightCount.value = rightList.length;
+    if (btnLeftCount.value > 0) btnPositionList.value.push(leftList);
+    if (btnCenterCount.value > 0) btnPositionList.value.push(centerList);
+    if (btnRightCount.value > 0) btnPositionList.value.push(rightList);
+}
+const btnTotal: number = props.defaultBtn
+    ? result_list.length + 1
+    : result_list.length;
+const btnRatio:any = {
+    left: (btnLeftCount.value * 100) / btnTotal,
+    center: (btnCenterCount.value * 100) / btnTotal,
+    right: (btnRightCount.value * 100) / btnTotal,
+};
+const fsAccessor = {
+    sbse003_product: "sbse003",
+    sbse003_taskname: "sbse003",
+    getFsVar: (name: string): string => {
+        const str: string = name;
+        return str;
+    },
+};
+const product: string = fsAccessor.getFsVar("sbse003_product");
+const taskname: string = fsAccessor.getFsVar("sbse003_taskname");
+const GlobalVariable = useRuntimeConfig();
+const baseUrl: string = GlobalVariable.FRESHFLOW_BASE_URL;
+try {
+    console.log("# baseUrl: " + baseUrl);
+    const basepath: Ref<string> = ref(
+        "/rest/flow/list/button/product=" + product + "&taskname=" + taskname
+    );
+    if ("" != props.applicationid) {
+        basepath.value = "/rest/app/" + props.applicationid + "/list/button";
+    }
+    console.log("========== [END] WORKFLOW-BUTTON ==========");
+} catch (e) {
+    console.error(e);
+}
+
+const contentSizeCalculate = (current: number, position: string): string => {
+    let ratio: number = btnRatio[position];
+    let classes = "";
+    if (ratio > 0 && ratio < 20) {
+        classes = "col-md-2";
+    } else if (ratio < 40) {
+        classes = "col-md-4";
+    } else if (ratio < 60) {
+        classes = "col-md-6";
+    } else if (ratio < 80) {
+        classes = "col-md-8";
+    } else if (ratio < 100) {
+        classes = "col-md-10";
+    } else if (ratio == 100) {
+        classes = "col-md-12";
+    }
+    return "left" != position ? "text-" + position + " " + classes : classes;
+};
+
+const defaultButtonFlow = (btn:string|boolean): void => {
+    console.log(`# default '${btn}' ButtonFlow!!`);
+};
+
+const emit = defineEmits<{
+  (e: 'action-flow', step: string, action: string, actiontype: string): void
+}>()
+</script>

@@ -1,0 +1,17 @@
+/* .k-autocomplete, .k-block, .k-colorpicker, .k-combobox, .k-datepicker, .k-datetimepicker, .k-drag-clue, .k-dropdown, .k-dropdown-wrap, .k-editor-inline, .k-grid .k-filter-options, .k-grouping-header .k-group-indicator, .k-inline-block, .k-list-container, .k-multiselect, .k-numeric-wrap, .k-numerictextbox, .k-picker-wrap, .k-slider-selection, .k-slider-track, .k-textbox, .k-timepicker, .k-touch-scrollbar, .k-treeview .k-in, .k-upload {
+    border-radius: 0.25rem;
+    height: 1.875rem;
+}
+
+.k-list>.k-state-hover {
+    background-color: #00994d;
+    cursor: pointer;
+    color: #fff;
+} */
+
+
+.k-button-solid-base {
+    background-image: none !important;
+    background-color: white;
+    border-left: 0;
+}

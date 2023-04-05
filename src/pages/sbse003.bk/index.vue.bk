@@ -1,0 +1,83 @@
+<template>
+    <LayoutProgram id="sbse003_content">
+        <template #head :enableAboutVersion="true" >👉🏻👉🏻👉🏻Add Transaction | TC</template>
+        <template #body>
+            <div class="mb-3">
+                <kendoDropdownList />
+            </div>
+            <form>
+                <StditemAccountAccountDetail />
+                <div class="mb-3">
+                    <label for="exampleInputEmail1" class="form-label"
+                        >Email address</label
+                    >
+                    <input
+                        type="email"
+                        class="form-control"
+                        id="exampleInputEmail1"
+                        aria-describedby="emailHelp"
+                    />
+                    <div id="emailHelp" class="form-text">
+                        We'll never share your email with anyone else.
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="sharecode" class="form-label">หลักทรัพย์ / Symbol</label>
+                    <input
+                        type="text"
+                        class="form-control"
+                        id="sharecode"
+                        aria-describedby="sharecodeHelp"
+                    />
+                    <div id="sharecodeHelp" class="form-text">
+                        We'll never share your email with anyone else.
+                    </div>
+                </div>
+                <div class="row justify-content-between">
+                    <UtilsObjectiveLookup className="mb-3 col-md-5" />
+                    <UtilsRemarksLookup className="mb-3 col-md-6" />
+                </div>
+                <div class="row">
+                    <Autocomplete
+                        class="form-control"
+                        :data-items="data"
+                        :text-field="'text'"
+                        :required="true"
+                        >
+                    </Autocomplete>
+                </div>
+                <div class="row">
+                    <UtilsWorkflowButton
+                        className="mb-3"
+                        @action-flow="actionFlowButtonInit"
+                        defaultBtn="cancel"
+                    />
+                </div>
+            </form>
+        </template>
+    </LayoutProgram>
+</template>
+<script setup lang="ts">
+const data = [{id:1, text: "text 1"}]
+const actionFlowButtonInit = (
+    step: string,
+    action: string,
+    actiontype: string
+): void => {
+    console.log("👉🏻 actionFlowButtonInit Function!");
+    console.log("# actionFlow: ", {
+        step: step,
+        action: action,
+        actiontype: actiontype,
+    });
+};
+</script>
+<script lang="ts">
+import { AutoComplete } from "@progress/kendo-vue-dropdowns";
+export default {
+  components: {
+    AutoComplete,
+  },
+};
+</script>
+<style scoped src="./sbse003.css"></style>

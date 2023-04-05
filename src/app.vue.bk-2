@@ -1,0 +1,24 @@
+<template>
+    <div>
+        <h1>🤣 This View From <code>/src/app.vue</code></h1>
+        <!-- <TheLoader /> -->
+        <!-- <NuxtLayout> -->
+        <div id="main-apps">
+            <NuxtPage />
+        </div>
+        <!-- </NuxtLayout> -->
+        <!-- <NuxtWelcome /> -->
+    </div>
+</template>
+<script setup lang="ts">
+console.log("🤣 Yahooo!!! This is From /src/App.vue!!!");
+useHead({
+    script: [
+        {
+            type: "text/javascript",
+            // src: "js/mdb.min.js",
+            src: "utils/mdb.min.js",
+        },
+    ],
+});
+</script>
