@@ -16,6 +16,21 @@ export default defineNuxtConfig({
         crossOriginPrefetch: true,
     },
     srcDir: "src/",
+    component: {
+        ignorePrefix: true
+    },
+    // imports: {
+    //     dirs: [
+    //         // Auto-import pinia stores defined in `~/stores`
+    //         "stores",
+    //         // Scan top-level modules
+    //         "composables",
+    //         // ... or scan modules nested one level deep with a specific name and file extension
+    //         "composables/*/index.{ts,js,mjs,mts}",
+    //         // ... or scan all modules within given directory
+    //         "composables/**",
+    //     ],
+    // },
     runtimeConfig: {
         // isCorsOriginAllowed: true,
         // Private keys are only available on the server
@@ -26,8 +41,8 @@ export default defineNuxtConfig({
             menuURL: process.env.MENU_URL || "",
             apiUtil: process.env.API_UTIL_URL,
             apiStock: process.env.API_STOCK_URL,
-            BASE_URL_UTIL: process.env.API_UTIL_URL,
-            BASE_URL_STOCK: process.env.API_STOCK_URL,
+            BASE_API_UTIL: process.env.BASE_API_UTIL,
+            BASE_API_STOCK: process.env.BASE_API_STOCK,
             FS_LANG: "EN",
         },
     },
@@ -61,22 +76,38 @@ export default defineNuxtConfig({
                     type: "font/ttf",
                     href: "fonts/Prompt-Regular.ttf",
                     as: "font",
+                },
+                {
+                    rel: "stylesheet",
+                    href: "fonts.css"
+                },
+                {
+                    // <!-- Font Awesome -->
+                    rel: "stylesheet",
+                    href: "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css",
                 }
             ],
             script: [
-                {
-                    type: "text/javascript",
-                    src: "https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.2.0/mdb.min.js",
-                },
+                // {
+                //     type: "text/javascript",
+                //     src: "public/js/jquery.min.js"
+                // },
+                // {
+                //     type: "text/javascript",
+                //     //         // src: "https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+                //     //         // src: 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js'
+                //     src: "https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.2.0/mdb.min.js",
+                //     // src: "https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/4.2.0/mdb.min.js",
+                //     // src: "https://cdn.jsdelivr.net/npm/mdb-ui-kit@4.2.0/js/mdb.min.js",
+                //     // src: "public/js/mdb.min.js"
+                //     // src: "js/mdb-6.2.0.min.js"
+                // },
             ],
         },
     },
+    // css: ["@/assets/MDB-Free_4.16.0/css/compiled-4.16.0.min.css", "@/assets/css/sba-styles.css"],
     css: [
-        "assets/scss/index.scss",
-        "material-icons/iconfont/material-icons.css",
-        "assets/css/glyphicon-bs3.min.css",
-        "assets/css/sba-styles.css",
-        "assets/css/sba-kendo-styles.css"
+        "assets/scss/index.scss"
     ],
     build: {
         transpile: ["mdb-vue-ui-kit"],
@@ -85,8 +116,29 @@ export default defineNuxtConfig({
     // script: [
     //     "@/assets/MDB-Free_4.20.0/js/mdb.min.js",
     // ],
-    plugins: [],
+    plugins: [{ src: '~/plugins/axios.ts', mode: 'client' }],
+    // modules: ['@pinia/nuxt'],
+    // modules: [
+    //     // Simple usage
+    //     // '@nuxtjs/eslint-module'
+    //     // With options => ['@nuxtjs/eslint-module', { /* module options */ }]
+    // ]
+    // i18n: {
+    //     locales: [{
+    //         code: 'en',
+    //         file: '/en-US.json'
+    //     }],
+    //     lazy: true,
+    //     langDir: 'lang',
+    //     defaultLocale: 'en'
+    // }
     alias: {
         'stores': fileURLToPath(new URL('./src/stores', import.meta.url))
-    }
+    },
+    components: [
+        {
+          path: '~/components', // will get any components nested in let's say /components/test too
+          pathPrefix: false,
+        }
+    ]
 });

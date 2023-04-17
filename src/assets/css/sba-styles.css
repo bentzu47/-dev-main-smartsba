@@ -3,6 +3,7 @@
 | # import SMARTSBA STYLES | VERSION 1.0
 |=======================================================================
 */
+
 @font-face {
     font-family: Prompt;
     font-weight: normal;
@@ -47,6 +48,10 @@
 } */
 
 :root {
+    --border-active-color: #5bbc9d;
+
+
+
     --header-color: #363636;
     --sidemenu-color: #2A3F54;
     --header-content-color: rgb(92, 109, 125);
@@ -66,6 +71,8 @@
     --default-disable-color: #d2d2d2;
     --checkbox-default-color: #c9c9c9;
     --reason-box-bg: #e8e8e8;
+
+    --darkblue-color: #375777;
     
     /* --scroll-bg: #5a7085; */
     --scroll-bg: #5E6678;
@@ -151,7 +158,7 @@ body {
     /* color: var(--content-font-color) */
 }
 
-.btn:not(.btn-floating) {
+.utils-workflow-btn .btn:not(.btn-floating) {
     /* border-radius: 4px!important; */
     border-radius: 0.25rem!important;
     padding: 0.6rem 2.14rem;  
@@ -284,6 +291,30 @@ button.btn>* {
 .top_nav .navbar-right {
     margin: auto 10px auto auto
 }
+
+.detail-item>.mi,.detail-item>i,.detail-item>span {
+    color: #4ab2bf;
+    font-size: 2.5em;
+    pointer-events: none
+}
+
+.detail-item .item-label {
+    color: #4c4c4c
+}
+
+.detail-item .item-span,.detail-item .item-span-lg {
+    color: #a7a7a7;
+    font-weight: 300;
+    max-width: 150px;
+    font-size: .78125rem!important;
+    padding: 0
+}
+
+.detail-item .item-span-lg {
+    color: initial;
+    font-size: 1.125rem!important
+}
+
 /* 
 .sba-logo {
     width: 45px;
@@ -298,7 +329,7 @@ span.sba-title {
     right: 0;
     padding-right: 15%
 } */
-
+/*
 .nav-sm .navbar.nav_title span.sba-title {
     display: none
 }
@@ -397,29 +428,6 @@ i.fa.fa-ellipsis-v {
     margin-left: 5px
 }
 
-.detail-item>.mi,.detail-item>i,.detail-item>span {
-    color: #4ab2bf;
-    font-size: 2.5em;
-    pointer-events: none
-}
-
-.detail-item .item-label {
-    color: #4c4c4c
-}
-
-.detail-item .item-span,.detail-item .item-span-lg {
-    color: #a7a7a7;
-    font-weight: 300;
-    max-width: 150px;
-    font-size: .78125rem!important;
-    padding: 0
-}
-
-.detail-item .item-span-lg {
-    color: initial;
-    font-size: 1.125rem!important
-}
-
 .form-control {
     height: 1.875rem
 }
@@ -449,12 +457,12 @@ i.fa.fa-ellipsis-v {
 .text-ocean {
     color: #5dbfa1!important
 }
-
+*/
 /* .btn.btn-xs {
     padding: .5rem 1rem;
     font-size: .64rem
 } */
-
+/*
 .text-green {
     color: #48994e
 }
@@ -512,7 +520,8 @@ label.require::after,label:not(.require) .require::after {
     font-weight: 400;
     padding-left: 5px
 }
-
+*/
+/*
 .form-group>label {
     font-weight: 600;
     pointer-events: visible;
@@ -544,6 +553,7 @@ textarea {
     border-radius: .25rem!important;
     box-shadow: none!important
 }
+*/
 /* 
 .k-picker-wrap {
     border: none

@@ -1,25 +1,30 @@
-const axios = require('axios');
+// import axios from "axios";
+// export const getJSONResponse = async (url: string, datas: object):Promise<null | object> => {
+//   // const { $Axios } = useNuxtApp();
+//   // console.log("# $Axios: ", $Axios)
 
-export const getJSONResponse = async (url: string):Promise<null | object> => {
-    const response: Array<null | object> = reactive([])
-    const { data } = await axios.post(url)
-    .then(function (resp: Response) {
-        console.log("# succes ✨")
-      // handle success
-      console.log(resp);
-    })
-    .catch(function (error: Error) {
-        console.log("# error ❌")
-      // handle error
-      console.log(error);
-    })
-    .finally(function () {
-      // always executed
-      // handle success
-      console.log('finally 👌🏻');
-    });
-    return response;
-}
+//     const response: Array<null | object> = reactive([]);
+//     console.log("# getJSONResponse | url: ", url);
+//     console.log("# getJSONResponse | datas: ", datas);
+
+//     const { data } = await axios.post(url)
+//     .then(function (resp: Response) {
+//         console.log("# succes ✨")
+//       // handle success
+//       console.log(resp);
+//     })
+//     .catch(function (error: Error) {
+//         console.log("# error ❌")
+//       // handle error
+//       console.log(error);
+//     })
+//     .finally(function () {
+//       // always executed
+//       // handle success
+//       console.log('finally 👌🏻');
+//     });
+//     return response;
+// }
 
 
 

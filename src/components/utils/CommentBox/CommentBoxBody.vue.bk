@@ -1,0 +1,142 @@
+<template>
+  <div :id="`${content.id}-body`" :class="`accordion-collapse collapse ${content.isEdit ? 'show' : ''}`"
+    :aria-labelledby="`${content.id}-heading`" :data-mdb-parent="`#${content.id}`">
+    <div class="accordion-body">
+      <div class="mb-3 row">
+        <label :for="`${content.id}-label`" class="col-sm-12 col-md-6 col-form-label form-label">ต้นแบบข้อคิดเห็น / Comment
+          Template</label>
+        <div class="col-sm-12 col-md-6">
+          <comboBox :data-items="commenttemplate.value" placeholder="Select Template..." />
+        </div>
+      </div>
+      <div class="mb-3 d-flex">
+        <div class="d-none d-md-block">
+          <div class="div-circle me-3"></div>
+        </div>
+        <div class="w-100">
+          <textarea class="form-control" :id="`${content.id}`" rows="3" placeholder="Write a comment..."></textarea>
+          <div class="invalid-feedback">Please Enter Something.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script lang="ts" setup>
+import { AccessorStores } from "stores/Accessor";
+
+const { $Axios } = useNuxtApp();
+const Accessor = AccessorStores();
+console.log("# Accessor Store: ", Accessor);
+
+interface CommentBody {
+  content: {
+    id: string;
+    name: string;
+    isEdit?: boolean;
+  }
+}
+
+const props = defineProps<CommentBody>();
+
+
+
+// /api/util/smartfresh/lookuptchecklist/collect
+const getLookupCommentlist = async (): Promise<void | object[]> => {
+  console.log("# call | getLookupCommentlist")
+  try {
+    const response = await getJSONResponse(useRuntimeConfig().public.BASE_API_UTIL + '/lookuptchecklist3/collect');
+    // const response = await getResponseBody(useRuntimeConfig().public.BASE_API_UTIL + '/lookuptchecklist/collect');
+    console.log("# getLookupCommentlist | Response: ", response);
+
+    // let body = request.data.bo
+    // return request.data;
+
+  } catch (error) {
+    console.log("# error, ", error);
+    console.error(error);
+  }
+}
+// const commentList2:Array<null|object> = await getLookupCommentlist();
+
+const { data: commenttemplate, pending, error } = await useFetch(useRuntimeConfig().public.BASE_API_UTIL + '/lookuptchecklist/collect', {
+  pick: ['body'],
+  method: 'post',
+  headers: {
+    'Content-Type': 'application/json',
+    'Fs-Key': '1c822dc2-ba23-4e05-8c2e-f2fd2a2bbead',
+    'Microservice': 'false',
+    'Fs-Track': 'ncit2'
+  }
+});
+
+console.log("# commenttemplate2: ", commenttemplate);
+const commentList:Array<null|object> = await (commenttemplate.value.body) ? commenttemplate.value.body.list: [];
+
+  console.log("# commentList: ", commentList);
+// console.log("# commenttemplate3: ", (commenttemplate.value) ? commenttemplate.value.body: []);
+console.log("# pending: ", pending);
+console.log("# error: ", error);
+
+
+// .then(function (response) {
+//   console.log(JSON.stringify(response.data));
+// })
+// .catch(function (error) {
+//   console.log(error);
+// });
+
+
+// const datalist = await response;
+
+// var axios = require('axios');
+// var data = '';
+
+// var config = {
+//   method: 'post',
+//   url: 'https://dsmartsbaws.freewillsolutions.com/api/util/smartfresh/lookuptchecklist/collect',
+//   headers: { 
+//     'Content-Type': 'application/json', 
+//     'Fs-Key': '50240dfc-47cc-4946-8cb9-5d95d5e16e31', 
+//     'Microservice': 'false', 
+//     'Fs-Track': 'ksp2'
+//   },
+//   data : data
+// };
+
+// axios(config)
+// .then(function (response) {
+//   console.log(JSON.stringify(response.data));
+// })
+// .catch(function (error) {
+//   console.log(error);
+// });
+onBeforeMount(async () => {
+  const response1 = await getLookupCommentlist();
+  console.log("# response1: ", response1);
+
+  // const response2 = await getJSONResponse(useRuntimeConfig().public.BASE_API_UTIL + '/lookuptchecklist3/collect');
+  // console.log("# response2: ", response2);
+})
+
+// import { ComboBox } from '@progress/kendo-vue-dropdowns';
+</script>
+
+<style scoped>
+textarea {
+  min-height: 86.58px !important;
+}
+
+.div-circle {
+  border-radius: 50%;
+  height: 4rem;
+  width: 4rem;
+  min-width: 50px;
+  min-height: 50px;
+  background-color: #d8d8d8;
+  background-image: linear-gradient(141deg, #c5dcd2 0, #ececec 51%, #e1e4e3 75%);
+  box-shadow: 1px 0 7px -2px #565656;
+  display: flex;
+  transition: 0.3s;
+}
+</style>

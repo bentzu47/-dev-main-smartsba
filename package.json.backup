@@ -1,0 +1,30 @@
+{
+  "private": true,
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev --host 0.0.0.0",
+    "dev0": "pnpm dev -o",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "devDependencies": {
+    "@nuxt/types": "^2.16.3",
+    "@nuxtjs/eslint-module": "^4.0.2",
+    "@nuxtjs/i18n": "^8.0.0-beta.10",
+    "@types/node": "^18.15.0",
+    "eslint": "^8.36.0",
+    "nuxt": "^3.3.1",
+    "typescript": "^4.9.5",
+    "vue-tsc": "^1.2.0"
+  },
+  "dependencies": {
+    "@progress/kendo-data-query": "^1.6.0",
+    "@progress/kendo-vue-dateinputs": "^3.8.5",
+    "@progress/kendo-vue-dropdowns": "^3.8.5",
+    "@progress/kendo-vue-excel-export": "^3.9.0",
+    "@progress/kendo-vue-grid": "^3.9.0",
+    "@progress/kendo-vue-pdf": "^3.9.0",
+    "pinia": "^2.0.33"
+  }
+}

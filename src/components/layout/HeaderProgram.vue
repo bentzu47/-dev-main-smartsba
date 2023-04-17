@@ -45,6 +45,7 @@
 </template>
 
 <script setup lang="ts">
+console.log("# Header Program Componnts")
 const props = defineProps({
   title: {
     type: String,
@@ -66,6 +67,8 @@ const props = defineProps({
     default: false,
   },
 });
+
+console.log("# props: ", props);
 </script>
 
 <style scoped>

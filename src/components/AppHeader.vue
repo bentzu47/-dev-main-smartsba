@@ -46,6 +46,21 @@ console.log('# props: ', props)
 const fsAccessor = AccessorStores();
 console.log('✨✨✨ fsAccessor: ', fsAccessor)
 // const { data: fsUserName } = await useAsyncData('accessor', () => store.getFsUsername)
+
+// const AppHeader = defineComponent({
+//     name: 'AppHeader'
+// })
+
+// const MyVueElement = defineCustomElement({
+//   /* component options */
+// })
+
+// Register the custom element.
+// customElements.define('my-vue-element', MyVueElement)
+
+defineComponent({
+    name: 'AppHeader'
+})
 </script>
 
 <style scoped>

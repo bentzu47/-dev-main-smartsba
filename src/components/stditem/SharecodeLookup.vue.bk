@@ -1,0 +1,267 @@
+<template>
+  <div :id="`${id}-lookup`" class="stditem-sharecode-lookup form-group">
+    <!-- Label Field -->
+    <label :for="`${name}`" :class="`form-label ${required ? 'require' : ''}`"
+      >หลักทรัพย์ / Symbol</label
+    >
+    <!-- Input Field -->
+    <AutoComplete
+      v-if="!viewmode"
+      class="form-control i-search-inner"
+      :aria-describedby="`${name}Help`"
+      :data-items="dataList"
+      :text-field="'sharename'"
+      :required="required"
+      placeholder="Symbol..."
+      @change="onChange"
+    />
+    <div v-else class="form-control-plaintext">{{ value }}</div>
+    <!-- Error Massage -->
+    <div :id="`${id}Help`" class="form-text" v-if="isError">
+      We'll never share your email with anyone else.
+    </div>
+  </div>
+</template>
+<script setup lang="ts">
+const { $Axios } = useNuxtApp();
+console.log("# Axios: ", $Axios)
+const config = useRuntimeConfig();
+
+type APIData = {
+  condboard?: string;
+  condxchgmkt?: string;
+  condmktcode?: string;
+  condsharetype?: string;
+  condsdcflag?: string;
+  shareid?: string;
+};
+
+interface SharecodeLookup {
+  viewmode?: boolean;
+  id?: string;
+  name?: string;
+  value?: string;
+  className?: string;
+  required?: boolean;
+  isError?: boolean;
+  params?: APIData;
+};
+
+const props = withDefaults(defineProps<SharecodeLookup>(), {
+  viewmode: false,
+  id: "sharecode",
+  name: "sharecode",
+  value: "",
+  className: "mb-3",
+  required: true,
+  isError: false,
+  params: {
+    condboard: "",
+    condxchgmkt: "",
+    condmktcode: "",
+    condsharetype: "",
+    condsdcflag: "",
+    shareid: ""
+  }
+});
+
+const defaultValue: Ref<string> = ref("");
+const dataList: Array<null|object> = ref([]);
+const getLookupSharecode = async (): Promise<Array<null|object>> => {
+  console.log("# call | getLookupSharecode")
+  let lists:Array<null> = [];
+  try {
+    let data:APIData = {
+      'condboard': props.params.condboard,
+      'condxchgmkt': props.params.condxchgmkt,
+      'condmktcode': props.params.condmktcode,
+      'condsharetype': props.params.condsharetype,
+      'condsdcflag': props.params.condsdcflag,
+      'shareid': props.params.shareid
+    };
+    let response = await getResponse(config.public.BASE_URL_UTIL + '/lookupsharecode/collect', data);
+    console.log('# response: ', response)
+    // // console.log("# response is: ", (response.hasOwnProperty('lists')) ? response.list: [])
+    // console.log("# result: ", response.result);
+    // console.log("# getLists: ", response.hasOwnProperty('lists'));
+    // if(response.result == 'Y'){
+    //   console.log("# response.lists: ", response.lists);
+    //   return lists = response.hasOwnProperty('lists') ? response.lists: [];
+    // } else {
+
+    // }
+    // console.log("# Return Sharecode List!")
+    // // return lists;
+  } catch (error) {
+    console.error(error);
+    throw new Error(error);
+  }
+}
+
+onBeforeMount(async () => {
+  try {
+    dataList.value = await getLookupSharecode();
+  } catch (err){
+    console.log("👹Found Error!!")
+  }
+})
+
+const onChange = (event:Event):void => {
+  // const value = event.target.value;
+  // console.log("# value: ", value);
+}
+</script>
+
+<script lang="ts">
+import { AutoComplete } from "@progress/kendo-vue-dropdowns";
+export default {
+  components: { AutoComplete }
+};
+</script>
+<style scoped>
+/* <span class="material-icons-sharp">search</span> */
+/* .stditem-sharecode-lookup .i-search-inner:before { */
+  /* content: "\e003";
+  font-family: "Glyphicons Halflings";
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1;
+  display: flex;
+  width: 1.5em;
+  height: 1.75em;
+  position: absolute;
+  right: 2px;
+  top: 0;
+  font-size: 1.125em;
+  color: #9da4ab;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.65;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+} */
+</style>
+<style>
+/* .stditem-sharecode-lookup .k-autocomplete.i-search-inner > .k-clear-value {
+  z-index: 1;
+  opacity: 1;
+  color: #b2b2b2;
+  background: white;
+  margin-right: 2px;
+} */
+</style>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<template>
+  <div :id="`${id}-lookup`" :class="`${className}`">
+    <label :for="`${name}`" :class="`form-label ${required ? 'require' : ''}`"
+      >หลักทรัพย์ / Symbol</label
+    >
+    <AutoComplete
+      class="form-control"
+      :aria-describedby="`${name}Help`"
+      :data-items="dataList"
+      :text-field="'text'"
+      :default-item="defaultItem"
+      :required="true"
+      placeholder="Symbol..."
+    >
+    </AutoComplete>
+    <div :id="`${id}Help`" class="form-text" v-if="isError">
+      We'll never share your email with anyone else.
+    </div>
+  </div>
+</template>
+<script setup lang="ts">
+interface SharecodeLookup {
+  id?: string;
+  name?: string;
+  value?: string;
+  className?: string;
+  required?: boolean;
+  isError?: boolean;
+  params?: {
+    condboard?: string;
+    condxchgmkt?: string;
+    condmktcode?: string;
+    condsharetype?: string;
+    condsdcflag?: string;
+    shareid?: string;
+  };
+}
+
+const props = withDefaults(defineProps<SharecodeLookup>(), {
+  id: "sharecode",
+  name: "sharecode",
+  value: "",
+  className: "mb-3",
+  required: true,
+  isError: false,
+  params: {
+    condboard: "",
+    condxchgmkt: "",
+    condmktcode: "",
+    condsharetype: "",
+    condsdcflag: "",
+    shareid: "",
+  },
+});
+
+const defaultItem: Ref<string> = ref("");
+// const getLookup = ():{}[] =>{
+
+// }
+const config = useRuntimeConfig();
+console.log("✨ config: ", config);
+const { data: data } = await useFetch(
+  config.public.apiUtil + "/lookupsharecode/collect",
+  {
+    method: "POST",
+    body: {
+      condboard: props.params.condboard,
+      condxchgmkt: props.params.condxchgmkt,
+      condmktcode: props.params.condmktcode,
+      condsharetype: props.params.condsharetype,
+      condsdcflag: props.params.condsdcflag,
+      shareid: props.params.shareid,
+    },
+    headers: {
+      "content-type": "application/json; charset=UTF-8",
+      "fs-key": "52f4dcfb-7be6-4ad0-8e00-f238d8c4296e",
+      "fs-track": "ncit2",
+      microservice: "false",
+    },
+    pick: ["body"],
+  }
+);
+console.log("# data: ", data);
+const dataList = data.hasOwnProperty("lists") ? data.lists : [];
+console.log("# Sharecode | dataList: ", dataList);
+</script>
+
+<script lang="ts">
+import { AutoComplete } from "@progress/kendo-vue-dropdowns";
+export default {
+  components: {
+    AutoComplete,
+  },
+};
+</script>
+<style scoped>
+.k-input-inner::after{
+  content: "✨";
+  padding: 0 4px;
+  display: block;
+}
+</style>

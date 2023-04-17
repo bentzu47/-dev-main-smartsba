@@ -2,9 +2,13 @@
     <div class="h-100">
         <app-loader v-if="showHideSpinner" />
         <nuxt-layout :name="defaultTemplate" class="container-xxxl">
-            <client-only placeholder="Loading...">
+            <client-only>
                 <!-- this component will only be rendered on client-side -->
-                <div id="mainapps">
+                <template #fallback>
+                    <!-- this will be rendered on server side -->
+                    <p>Loading comments...</p>
+                </template>
+                <div id="main-apps">
                     <nuxt-page />
                 </div>
             </client-only>

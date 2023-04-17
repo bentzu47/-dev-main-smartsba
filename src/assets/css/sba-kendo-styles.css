@@ -10,8 +10,99 @@
 } */
 
 
+.k-input-md, .k-picker-md {
+    font-size: 13px;
+}
+
+/* Field Input */
+.k-input-solid:hover, .k-input-solid.k-hover {
+    /* border-color: rgba(0, 0, 0, 0.16); */
+    border-color: var(--border-active-color);
+}
+
+.k-input-solid:focus, .k-input-solid.k-focus,
+.k-input-solid:focus-within {
+    border-color: var(--border-active-color);
+    box-shadow: 0 .55px 0 0 var(--border-active-color),0 4px 4px -4px var(--border-active-color)
+}
+
+.k-list-content {
+
+}
+/* Popup Scrollbar */
+/* 
+.k-grid ::-webkit-scrollbar,.k-popup.k-calendar-container ::-webkit-scrollbar,
+.k-popup.k-list-container ::-webkit-scrollbar {
+    width: .45rem;
+    height: .45rem
+}
+
+.k-popup.k-calendar-container ::-webkit-scrollbar-thumb,.k-popup.k-list-container ::-webkit-scrollbar-thumb {
+    border-radius: var(--scroll-radius);
+    border-color: var(--scroll-border);
+    background: var(--scroll-bg)
+}
+
+.k-grid ::-webkit-scrollbar-thumb {
+    border-radius: var(--scroll-radius);
+    background: hsl(0deg 0% 83% / 80%)
+}
+
+.k-grid ::-webkit-scrollbar-thumb:hover,.k-popup.k-calendar-container ::-webkit-scrollbar-thumb:hover,.k-popup.k-list-container ::-webkit-scrollbar-thumb:hover {
+    background: var(--scroll-thumb-bg)
+} */
+
+
+/* Kendo Button */
 .k-button-solid-base {
     background-image: none !important;
     background-color: white;
     border-left: 0;
+}
+
+.k-button-solid-base:hover, .k-button-solid-base.k-hover {
+    background-color: #fafafa;
+}
+
+/* Popup Dropdownlist */
+.k-list-item.k-selected,
+.k-list-item.k-selected:hover {
+    background-color: #009688;
+}
+
+
+:root {
+    --mdb-modal-inner-border-radius: calc(0.5rem - 1px)
+}
+/* Popup Modal */
+.k-window-titlebar {
+    background-color: #ffffff !important;
+}
+
+.k-window-titlebar.k-dialog-titlebar {
+    padding: 1rem !important;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid hsl(0deg, 0%, 96%);
+}
+
+.k-dialog-wrapper .k-dialog {
+    border-radius: var(--mdb-modal-inner-border-radius);
+}
+
+.k-window-titlebar {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--mdb-modal-header-padding);
+    /* border-bottom: var(--mdb-modal-header-border-width) solid var(--mdb-modal-header-border-color); */
+    border-bottom: 2px solid hsl(0deg, 0%, 96%);
+    border-top-left-radius: var(--mdb-modal-inner-border-radius);
+    border-top-right-radius: var(--mdb-modal-inner-border-radius);
+}
+
+.k-window-content {
+    position: relative;
+    flex: 1 1 auto;
+    padding: var(--mdb-modal-padding);
 }

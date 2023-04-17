@@ -1,0 +1,120 @@
+// https://nuxt.com/docs/api/configuration/nuxt-config
+export default defineNuxtConfig({
+    dev: true,
+    debug: true,
+    devServer: {
+        port: 5484,
+        // https: true,
+    },
+    typescript: {
+        strict: true,
+        typeCheck: true,
+    },
+    experimental: {
+        crossOriginPrefetch: true,
+    },
+    srcDir: "src/",
+    imports: {
+        dirs: [
+            // Auto-import pinia stores defined in `~/stores`
+            "stores",
+            // Scan top-level modules
+            "composables",
+            // ... or scan modules nested one level deep with a specific name and file extension
+            "composables/*/index.{ts,js,mjs,mts}",
+            // ... or scan all modules within given directory
+            "composables/**",
+        ],
+    },
+    runtimeConfig: {
+        // isCorsOriginAllowed: true,
+        // Private keys are only available on the server
+        apiSecret: "123",
+        menuURL: process.env.MENU_URL || "",
+        public: {
+            baseURLUtil: process.env.API_UTIL_URL,
+            menuURL: process.env.MENU_URL || "",
+            apiUtil: process.env.API_UTIL_URL,
+            apiStock: process.env.API_STOCK_URL,
+        },
+    },
+    app: {
+        pageTransition: {
+            name: "page",
+            mode: "out-in", // Default
+        },
+        layoutTransition: {
+            name: "slide",
+            mode: "out-in", // Default
+        },
+        head: {
+            title: "Stock Management",
+            meta: [
+                { charset: "utf-8" },
+                {
+                    name: "viewport",
+                    content:
+                        "width=device-width, initial-scale=1, shrink-to-fit=no",
+                },
+            ],
+            link: [
+                {
+                    rel: "icon",
+                    type: "image/png",
+                    href: "/sba-icon.ico",
+                },
+                {
+                    rel: "preload",
+                    type: "font/ttf",
+                    href: "/fonts/Prompt-Regular.ttf",
+                    as: "font",
+                },
+                {
+                    // <!-- Font Awesome -->
+                    rel: "stylesheet",
+                    href: "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css",
+                },
+                {
+                    // <!-- MDB -->
+                    rel: "stylesheet",
+                    // href: 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css'
+                    // href: "https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.1.0/mdb.min.css"
+                    href: "https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.2.0/mdb.min.css",
+                },
+            ],
+            script: [
+                {
+                    type: "text/javascript",
+                    // src: "https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+                    // src: 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js'
+                    // src: "https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.1.0/mdb.min.js",
+                    src: "https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/4.2.0/mdb.min.js",
+                    // src: "https://cdn.jsdelivr.net/npm/mdb-ui-kit@4.2.0/js/mdb.min.js",
+                },
+            ],
+        },
+    },
+    // css: ["@/assets/MDB-Free_4.16.0/css/compiled-4.16.0.min.css", "@/assets/css/sba-styles.css"],
+    css: [
+        "@/assets/MDB-Free_4.20.0/css/mdb.min.css",
+        "@/assets/css/glyphicon-bs3.min.css",
+        "@/assets/css/sba-styles.css",
+    ],
+    // script: [
+    //     "@/assets/MDB-Free_4.20.0/js/mdb.min.js",
+    // ],
+    modules: [
+        // Simple usage
+        // '@nuxtjs/eslint-module'
+        // With options => ['@nuxtjs/eslint-module', { /* module options */ }]
+    ],
+    // i18n: {
+    //     locales: [{
+    //         code: 'en',
+    //         file: '/en-US.json'
+    //     }],
+    //     lazy: true,
+    //     langDir: 'lang',
+    //     defaultLocale: 'en'
+    // }
+});

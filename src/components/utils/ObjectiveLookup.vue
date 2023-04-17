@@ -1,81 +1,109 @@
 <template>
-  <div :id="`${props.id}-lookup`" :class="`${props.className}`">
-    <label :for="`${props.name}`" :class="`form-label ${required ? 'require' : ''}`"
+  <FormGroup
+    :id="`${id}-lookup-box`"
+    :class="`utils-objective-lookup form-group ${className}`"
+  >
+    <label :for="`${id}`" :class="`form-label ${required ? 'require' : ''}`"
       >วัตถุประสงค์ / Objective</label
     >
-    <ComboBox
-      class="form-control"
-      :aria-describedby="`${props.name}Help`"
+    <KendoComboBox
+      :id="id"
+      :default-value="value"
       :data-items="dataList"
-      :text-field="'text'"
-      :default-item="defaultItem"
-      :required="true"
+      :text-field="'name'"
+      :data-item-key="'name'"
+      :value-field="'value'"
+      :required="required"
+      :allow-custom="true"
       placeholder="Choose..."
+      :aria-labelled-by="`${id}-label`"
+      :error-msg="errorMsg"
+      :popup-settings="{ className: 'z-index' }"
+      :append-to="`${id}-lookup-box`"
+      @change="emit('change', $event.target.value)"
     />
-    <div v-if="props.isError" :id="`${props.id}Help`" class="form-text">
-      We'll never share your email with anyone else.
-    </div>
-  </div>
+    <InputErrorMsg v-if="fieldError.status" :for="`${id}`">
+      {{ fieldError.message }}
+    </InputErrorMsg>
+  </FormGroup>
 </template>
 <script setup lang="ts">
-interface ObjectiveParams {
-  section?: string;
-  type?: string;
-  name?: string;
-}
-interface ObjectiveAttrs {
+import { ComboBox as KendoComboBox } from '@progress/kendo-vue-dropdowns';
+type APIData = {
+  section: string;
+  type: string;
+  name: string;
+};
+interface ObjectiveLookup {
   id?: string;
   name?: string;
   value?: string;
   className?: string;
   required?: boolean;
-  params?: ObjectiveParams
+  params?: APIData;
+  errorMsg?: string;
 }
 
-const props = withDefaults(defineProps<ObjectiveAttrs>(), {
-  id: "objective",
-  name: "objective",
-  value: "",
-  className: "mb-3",
-  required: true,
-  isError: false,
-  params: {
-    section: "",
-    type: "",
-    name: "",
+const props = withDefaults(defineProps<ObjectiveLookup>(), {
+  id: 'objective',
+  name: 'objective',
+  value: '',
+  className: '',
+  required: false,
+  errorMsg: '',
+  params: () => {
+    return {
+      section: 'BSE602AObjective',
+      type: 'L',
+      name: '',
+    };
   },
 });
-const defaultItem: Ref<string> = ref("");
-// const getLookup = ():{}[] =>{
 
-// }
-const config = useRuntimeConfig();
-console.log("# config: ", config);
-const { data } = await useFetch(config.public.apiUtil + "/inqsbconfig/collect", {
-  method: "POST",
-  body: {
-    section: "BSE602AObjective",
-    type: "L",
-    name: "",
-  },
-  headers: {
-    "content-type": "application/json; charset=UTF-8",
-    "fs-key": "52f4dcfb-7be6-4ad0-8e00-f238d8c4296e",
-    "fs-track": "ncit2",
-    microservice: "false",
-  },
-  pick: ["body"],
+console.log('# ObjectiveLookup props: ', props);
+
+const fieldError = reactive({
+  status: !!props.errorMsg,
+  message: props.errorMsg,
 });
-console.log("# data: ", data);
-const dataList: Array<{}> = data.hasOwnProperty("lists") ? data.lists : [];
-console.log("# dataList: ", dataList);
-</script>
 
-<script lang="ts">
-import { ComboBox } from "@progress/kendo-vue-dropdowns";
-export default {
-  components: {
-    ComboBox,
-  },
+const dataList: Array<null | object> = ref([]);
+const getObjectiveLookup = async (): Promise<Array<null | object>> => {
+  try {
+    const data: APIData = {
+      section: props.params.section,
+      type: props.params.type,
+      name: props.params.name,
+    };
+    const response = await getInqSBConfig(data);
+    if (response.result === 'Y') {
+      return Object.getOwnPropertyDescriptor(response, 'lists')
+        ? response.lists
+        : [];
+    } else {
+      throw response.reason;
+    }
+  } catch (error) {
+    console.error(error);
+    fieldError.message = error;
+    throw new Error(error);
+  }
 };
+
+const emit = defineEmits<{ (e: 'change', dataItem: object): void }>();
+
+onBeforeMount(async () => {
+  try {
+    let response = await getObjectiveLookup();
+    if(response.length > 0) dataList.value = response;
+    console.log('# objective lookup: ', response);
+  } catch (err) {
+    console.log('👹Found Error!!');
+  }
+});
 </script>
+<style>
+.z-index {
+  z-index: 10000;
+}
+</style>

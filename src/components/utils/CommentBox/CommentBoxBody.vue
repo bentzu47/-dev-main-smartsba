@@ -1,15 +1,19 @@
 <template>
-  <div :id="`${content.id}-body`" :class="`accordion-collapse collapse ${content.isEdit ? 'show' : ''}`"
-    :aria-labelledby="`${content.id}-heading`" :data-mdb-parent="`#${content.id}`">
+  <div :id="`${id}-body`" :class="`accordion-collapse ${visible ? 'show' : ''}`"
+    :aria-labelledby="`${id}-heading`" :data-mdb-parent="`#${id}`">
     <div class="accordion-body">
       <div class="mb-3 row">
-        <label :for="`${content.id}-label`" class="col-sm-12 col-md-6 col-form-label form-label">ต้นแบบข้อคิดเห็น / Comment
+        <label :for="`${id}-label`" class="col-sm-12 col-md-6 col-form-label form-label">ต้นแบบข้อคิดเห็น / Comment
           Template</label>
         <div class="col-sm-12 col-md-6">
-          <comboBox :data-items="commenttemplate.value" :allow-custom="true"  placeholder="Select Template..." />
-          <!--           
-          <input type="text" readonly class="form-control-plaintext" :id="`${content.id}-input`"
-            placeholder="Select Template..." /> -->
+          <!-- @change="emit('change', $event.target.value)" -->
+          <KendoComboBox :id="`${id}-lookup`" placeholder="Select Template..."
+          :default-value="value"
+          :data-items="dataList"
+          :text-field="'chkdescription'"
+          :value-field="'chkdescription'"
+          @change="onSelectTemplate"
+           />
         </div>
       </div>
       <div class="mb-3 d-flex">
@@ -17,7 +21,7 @@
           <div class="div-circle me-3"></div>
         </div>
         <div class="w-100">
-          <textarea class="form-control" :id="`${content.id}`" rows="3" placeholder="Write a comment..."></textarea>
+          <FormInput type="textarea" :v-model="commentTextBox" :id="`${id}`" rows="3" placeholder="Write a comment..." no-label :resize="false" />
           <div class="invalid-feedback">Please Enter Something.</div>
         </div>
       </div>
@@ -26,106 +30,57 @@
 </template>
 
 <script lang="ts" setup>
+import { ComboBox as KendoComboBox } from "@progress/kendo-vue-dropdowns";
 import { AccessorStores } from "stores/Accessor";
-
-const { $Axios } = useNuxtApp();
-const config = useRuntimeConfig();
 const Accessor = AccessorStores();
 console.log("# Accessor Store: ", Accessor);
 
 interface CommentBody {
-  content: {
-    id: string;
-    name: string;
-    isEdit?: boolean;
-  }
+  id: string;
+  name: string;
+  visible?: boolean;
+  vModel: string;
 }
 
 const props = defineProps<CommentBody>();
 
-
-
-// /api/util/smartfresh/lookuptchecklist/collect
-// Axios
-
-console.log("# $Axios: ", $Axios);
-
-
 const getLookupCommentlist = async (): Promise<void | object[]> => {
   console.log("# call | getLookupCommentlist")
   try {
-    const { data: response } = await $Axios.post(config.public.BASE_URL_UTIL + '/lookuptchecklist/collect');
-    // const { body } = await request.data;
-    console.log("# getLookupCommentlist | Response: ", response);
-
-    // let body = request.data.bo
-    // return request.data;
-
+    const response = await getJSONResponse(useRuntimeConfig().public.BASE_API_UTIL + '/lookuptchecklist/collect');
+    if (response.result == "Y") {
+      return response.hasOwnProperty("lists") ? response.lists : [];
+    } else {
+      throw response.reason;
+    }
   } catch (error) {
+    console.log("# error, ", error);
     console.error(error);
   }
 }
-// const commentList2:Array<null|object> = await getLookupCommentlist();
 
-const { data: commenttemplate, pending, error } = await useFetch(config.public.BASE_URL_UTIL + '/lookuptchecklist/collect', {
-  pick: ['body'],
-  method: 'post',
-  headers: {
-    'Content-Type': 'application/json',
-    'Fs-Key': '1c822dc2-ba23-4e05-8c2e-f2fd2a2bbead',
-    'Microservice': 'false',
-    'Fs-Track': 'ncit2'
+const commentTextBox = ref('');
+const onSelectTemplate = (event) => {
+  if(event.target.value) {
+    let textValue = ((commentTextBox.value)? "\n": "") + event.target.value.chkdescription;
+    console.log("# commentTextBox.value: ", commentTextBox.value);
+    console.log("# textValue: ", textValue);
+    commentTextBox.value += textValue;
   }
-});
+  event.target.value = null;
+}
 
-console.log("# commenttemplate2: ", commenttemplate);
-const commentList:Array<null|object> = await (commenttemplate.value.body) ? commenttemplate.value.body.list: [];
+const onChange = (event) => {
+  console.log("# commentTextBox: ", commentTextBox.value);
+  // this.value = event.target.value;
+}
 
-  console.log("# commentList: ", commentList);
-// console.log("# commenttemplate3: ", (commenttemplate.value) ? commenttemplate.value.body: []);
-console.log("# pending: ", pending);
-console.log("# error: ", error);
-
-
-// .then(function (response) {
-//   console.log(JSON.stringify(response.data));
-// })
-// .catch(function (error) {
-//   console.log(error);
-// });
-
-
-// const datalist = await response;
-
-// var axios = require('axios');
-// var data = '';
-
-// var config = {
-//   method: 'post',
-//   url: 'https://dsmartsbaws.freewillsolutions.com/api/util/smartfresh/lookuptchecklist/collect',
-//   headers: { 
-//     'Content-Type': 'application/json', 
-//     'Fs-Key': '50240dfc-47cc-4946-8cb9-5d95d5e16e31', 
-//     'Microservice': 'false', 
-//     'Fs-Track': 'ksp2'
-//   },
-//   data : data
-// };
-
-// axios(config)
-// .then(function (response) {
-//   console.log(JSON.stringify(response.data));
-// })
-// .catch(function (error) {
-//   console.log(error);
-// });
+const dataList = ref([]);
 onBeforeMount(async () => {
   const response = await getLookupCommentlist();
-
-  getJSONResponse(config.public.BASE_URL_UTIL + '/lookuptchecklist/collect');
+  if(response.length > 0) dataList.value = response;
 })
 
-// import { ComboBox } from '@progress/kendo-vue-dropdowns';
 </script>
 
 <style scoped>

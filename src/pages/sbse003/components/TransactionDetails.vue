@@ -1,72 +1,135 @@
 <template>
-    <section class="row no-gutters mb-3">
-      <h6 class="header-label">ข้อมูลเลขที่บัญชีหลักทรพย์ผู้โอน / Transferer’s Information</h6>
-      <div class="row no-gutters px-0 py-3 border">
-      <template v-for="(field, index) in transfer_info" :key="field.inputname">
-        <div class="row" v-if="(index % 3) == 0">
-          <div class="col-md-4 col-xl-3">
-            <div class="form-group">
-              <label class="form-label" for="faccount">เลขที่บัญชีหลักทรัพย์ / Account</label>
-              <input class="form-control-plaintext" type="text" name="faccount" value="" readonly>
-            </div>
-          </div>
-        </div>
-      </template>
-
-        <div class="col-md-4 col-xl-3">
-          <div class="form-group">
-            <label class="form-label" for="faccount">เลขที่บัญชีหลักทรัพย์ / Account</label>
-            <input class="form-control-plaintext" type="text" name="faccount" value="" readonly>
-          </div>
-        </div>
-
+  <div>
+    <FormRow>
+      <SharecodeLookup class="col-md-4" />
+      <div class="offset-md-2 col-md-6">
+        <FormRow>
+          <FormGroup class-name="col-6">
+            <FormInput
+              id="trans_market"
+              :v-model="Trans.mktcode"
+              type="input"
+              label="Market"
+              placeholder="N/A"
+              input-class="form-control-plaintext"
+              readonly
+            />
+          </FormGroup>
+          <FormGroup class-name="col-5">
+            <FormInput
+              id="trans_regisflag"
+              :v-model="Trans.regisflag"
+              type="checkbox"
+              input-label="Registrar is TSD"
+              readonly
+            />
+          </FormGroup>
+        </FormRow>
       </div>
-      <!-- Append Something below -->
-      <slots name="append"></slots>
-    </section>
+    </FormRow>
+    <FormRow>
+      <FormGroup class-name="col-md-4">
+        <label class="form-label">From Purpose</label>
+        <input id="fpurpose" type="text" class="form-control" />
+      </FormGroup>
+      <FormGroup class-name="offset-md-2 col-md-4">
+        <FormInput
+          id="trans_availableunit"
+          type="input"
+          label="Available Unit"
+          label-class="text-darkblue"
+          input-class="form-control-plaintext"
+          placeholder="0"
+          readonly
+          :v-model="Trans.availableunit"
+        />
+      </FormGroup>
+    </FormRow>
+    <FormRow>
+      <FormGroup class-name="col-6">
+        <label class="form-label">Trading Flag</label>
+        <div>
+          <FormInput
+            id="trans_tradeflag_ch1"
+            type="radio"
+            input-name="trans_tradeflag"
+            input-value="Y"
+            input-label="Listed"
+            no-label
+            inline
+            :v-model="Trans.tradeflag"
+          />
+          <FormInput
+            id="trans_tradeflag_ch2"
+            type="radio"
+            input-name="trans_tradeflag"
+            input-value="N"
+            input-label="Non – Listed"
+            no-label
+            inline
+            :v-model="Trans.tradeflag"
+          />
+        </div>
+      </FormGroup>
+      <FormGroup class-name="col-6 align-self-center">
+        <ModalCAInfo />
+      </FormGroup>
+    </FormRow>
+    <FormRow>
+      <FormGroup class-name="col-4">
+        <label class="form-label">CA Type / Date / No.</label>
+        <input id="tpurpose" type="text" class="form-control" />
+      </FormGroup>
+      <FormGroup class-name="offset-md-2 col-md-4">
+        <label class="form-label">X Date</label>
+        <input id="tpurpose" type="text" class="form-control" />
+      </FormGroup>
+    </FormRow>
+    <FormRow>
+      <FormGroup class-name="col-md-4">
+        <label class="form-label">To Purpose</label>
+        <input id="tpurpose" type="text" class="form-control" />
+      </FormGroup>
+    </FormRow>
+    <FormRow>
+      <FormGroup class-name="col-md-4">
+        <label class="form-label"> จำนวนหุ้น / Unit </label>
+        <KendoNumericTextBox class="form-control" :default-value="0" :step="1" />
+      </FormGroup>
+      <FormGroup class-name="offset-md-2 col-md-4">
+        <label class="form-label"> Avg. Cost </label>
+        <KendoNumericTextBox class="form-control" :default-value="5" :step="3" />
+      </FormGroup>
+    </FormRow>
+    <FormRow>
+      <ObjectiveLookup
+        id="trans-objective"
+        class-name="col-md-6"
+        value=""
+        @change="objectiveOnChange"
+      />
+      <RemarksLookup
+        id="trans-remarks"
+        class-name="col-md-6"
+        value=""
+        @change="remarksOnChange"
+      />
+    </FormRow>
+  </div>
 </template>
-
-<script setup lang="ts">
-const props = defineProps({ 
-  "transerinfo": {
-    type: String,
-    required: true
-  }
+<script lang="ts" setup>
+const Trans = reactive({
+    mktcode: "",
+    regisflag: "1",
+    availableunit: 0,
+    tradeflag: "Y",
 });
-console.log("# props: ", props.transerinfo);
-const prefix = ref((props.transerinfo == 'transferer')? 'f': 't');
-interface TransferersInfoItem {
-  inputlabel: string;
-  inputname: string;
-  inputvalue: string;
+
+const objectiveOnChange = () =>{
+  console.log("# Objective Change!")
 }
 
-interface TransfereesInfoItem {
-  inputlabel: string;
-  inputname: string;
-  inputvalue: string;
+const remarksOnChange = () =>{
+  console.log("# Rmarks Change!")
 }
-
-
-const transfer_info:Array<object[TransferersInfoItem]> = [{
-  inputlabel: 'เลขที่อ้างอิงรายการ',
-  inputname: 'referno',
-  inputvalue: 'TC-20220704-00001',
-},{
-  inputlabel: 'วัน-เวลาที่สร้าง / Creation Date',
-  inputname: 'createdate',
-  inputvalue: '05/02/2021 10:37:10',
-},{
-  inputlabel: 'ผู้สร้างรายการ / Create User',
-  inputname: 'createuser',
-  inputvalue: 'Ralph West',
-},{
-  inputlabel: 'ช่องทางที่ใช้ / Channel',
-  inputname: 'channel',
-  inputvalue: 'SBA Entry',
-}]
 </script>
-
-<style lang="scss" scoped>
-
-</style>

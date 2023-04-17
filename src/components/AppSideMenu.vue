@@ -48,8 +48,57 @@
 </template>
 
 <script setup lang="ts">
-//  const config = useRuntimeConfig()
-//  const { response } = await $fetch(`https://10.22.26.75/AUTHREF/menu/get_menufile.jsp?programgroupname=SBRE188M.nagivate`, { method: 'GET' })
+const config = useRuntimeConfig();
+console.log("# config: ", config);
+// const { response } = await $fetch(`${config.public.menuURL}?programgroupname=SBSE602M.nagivate`, { method: 'GET' })
+const { $Axios } = useNuxtApp();
+const getMenuFile = async (): Promise<void | object[]> => {
+  console.log("# call | getMenuFile")
+  try {
+
+    // const response = await $Axios.get(`https://dsmartsbaws.freewillsolutions.com/AUTHREF/menu/get_menufile.jsp?programgroupname=SBSE602M.nagivate`);
+    const { data: response } = await useFetch(`https://dsmartsbaws.freewillsolutions.com/AUTHREF/menu/get_menufile.jsp?programgroupname=SBSE602M.nagivate`);
+
+    console.log("# Response Get Menufile: ", response);
+
+
+    // const axios = require('axios');
+
+let config = {
+  method: 'get',
+  maxBodyLength: Infinity,
+  url: 'https://dsmartsbaws.freewillsolutions.com/AUTHREF/menu/get_menufile.jsp?programgroupname=SBSE602M.nagivate',
+  headers: { 
+    'Cookie': 'JSESSIONID=5E70236038791F09C1CE9F6D66E15108'
+  }
+};
+
+async function makeRequest() {
+  try {
+    const response = await $Axios.request(config);
+    console.log("# Response: ", response)
+    console.log(JSON.stringify(response.data));
+  }
+  catch (error) {
+    console.log(error);
+  }
+}
+
+makeRequest();
+
+    
+    // if (response.result == "Y") {
+    //   return response.hasOwnProperty("lists") ? response.lists : [];
+    // } else {
+    //   throw response.reason;
+    // }
+  } catch (error) {
+    console.log("# error, ", error);
+    console.error(error);
+  }
+}
+
+
 
 // const { data: response, pending, error, refresh } = await useFetch('/api/authref/menu')
 
@@ -58,6 +107,10 @@ console.log("# data: ", data);
 // console.log('# menuLists: ', data?._rawValue?.content)
 const menuLists = await data?._rawValue?.content;
 console.log('# menuLists: ', menuLists)
+
+onMounted(async ()=>{
+    await getMenuFile();
+})
 </script>
 
 <script lang="ts">
